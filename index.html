@@ -76,25 +76,7 @@
   <a class="a11y-skip-link" href="#root">Skip to main content</a>
   <div id="root" role="main" tabindex="-1"></div>
 
-  <script>
-    (() => {
-      const nativeScrollIntoView = Element.prototype.scrollIntoView;
-      let protectInitialViewport = true;
-
-      Element.prototype.scrollIntoView = function (...args) {
-        if (protectInitialViewport && document.getElementById("root")?.contains(this)) return;
-        return nativeScrollIntoView.apply(this, args);
-      };
-
-      window.addEventListener("load", () => {
-        setTimeout(() => {
-          protectInitialViewport = false;
-          Element.prototype.scrollIntoView = nativeScrollIntoView;
-        }, 1000);
-      }, { once: true });
-    })();
-  </script>
-  <script type="module" src="/assets/app.47950ff22bd4.js"></script>
+  <script type="module" src="/assets/app.47950ff22bd4a.js"></script>
   <style>
     .a11y-skip-link {
       position: fixed;
@@ -177,12 +159,6 @@
         });
       };
 
-      const enhanceButtons = () => {
-        root.querySelectorAll("div.fixed > button.group").forEach((button) => {
-          setLabel(button, "Open TexasJetQuote AI quote agent");
-        });
-      };
-
       const enhanceFaq = () => {
         root.querySelectorAll("#faq button").forEach((button, index) => {
           const panel = button.parentElement?.children[1];
@@ -261,7 +237,6 @@
       const enhance = () => {
         enhanceForms();
         enhanceLinks();
-        enhanceButtons();
         enhanceFaq();
         enhanceDialog();
         enhanceStatuses();
