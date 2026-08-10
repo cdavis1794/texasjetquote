@@ -5,6 +5,8 @@
   var AFFILIATE_HOST = "villiers.ai";
   var DEFAULT_AFFILIATE_ID = "1673";
 
+  document.documentElement.setAttribute("data-tjq-events", "ready");
+
   function isVilliersLink(anchor) {
     if (!anchor || !anchor.href) return false;
     try {
