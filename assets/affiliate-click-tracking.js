@@ -35,6 +35,8 @@
       event_type: "affiliate_click",
       occurred_at: new Date().toISOString(),
       page_path: window.location.pathname,
+      partner: "Villiers",
+      placement: anchor.getAttribute("data-placement") || (anchor.closest("section,header,footer,aside,article") || {}).id || (anchor.closest("section,header,footer,aside,article") || {}).className || "page",
       button_label: cleanLabel(anchor),
       destination: destination.origin + destination.pathname,
       affiliate_id: destination.searchParams.get("id") || DEFAULT_AFFILIATE_ID
