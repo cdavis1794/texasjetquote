@@ -109,6 +109,14 @@
     }
   }
 
+  function recordSavedQuoteConversion() {
+    if (typeof window.gtag === "function") {
+      window.gtag("event", "conversion", {
+        send_to: "AW-18387073303/uwaLCPKBrOMcEJfy0b9E"
+      });
+    }
+  }
+
   function setView(view) {
     var planner = byId("quote-planner");
     var result = byId("planning-result");
@@ -230,6 +238,7 @@
         if (!response.ok) throw new Error("Request could not be saved");
         setView("success");
         event("austin_quote_request_saved");
+        recordSavedQuoteConversion();
       } catch (error) {
         status.textContent = "We could not save the request. Please try again or continue to Villiers for current options.";
         button.disabled = false;
