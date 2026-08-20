@@ -238,6 +238,11 @@
         if (!response.ok) throw new Error("Request could not be saved");
         setView("success");
         event("austin_quote_request_saved");
+        if (typeof window.gtag === "function") {
+          window.gtag("event", "generate_lead", {
+            lead_source: "austin_quote_planner"
+          });
+        }
         recordSavedQuoteConversion();
       } catch (error) {
         status.textContent = "We could not save the request. Please try again or continue to Villiers for current options.";
