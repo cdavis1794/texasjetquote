@@ -9,6 +9,7 @@
   <link rel="canonical" href="https://texasjetquote.com/private-trip-brief/">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/assets/private-trip-brief.css">
+  <link rel="stylesheet" href="/assets/private-trip-brief-checkout.css">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="TexasJetQuote.com">
   <meta property="og:title" content="Jet-to-Door Private Trip Brief">
@@ -78,8 +79,8 @@
           <li>Useful timing and backup notes</li>
           <li>Direct supplier links for your review</li>
         </ul>
-        <a class="button button--gold" href="#brief-intake" data-trip-brief-cta data-trip-brief-tier="full_brief">Request my Full Brief — $249</a>
-        <p class="offer-card__fine">We confirm fit and send secure payment instructions before work begins. Planning and recommendations only; reservations are not booked or held.</p>
+        <a class="button button--gold" href="https://buy.stripe.com/14A14n4u8dtw4O6bBM9IQ07" data-trip-brief-cta data-trip-brief-checkout data-trip-brief-tier="full_brief" data-placement="brief-full-card">Buy the Full Brief securely — $249</a>
+        <p class="offer-card__fine">Secure checkout is processed by Well Played Travel through Stripe, then you complete your trip preferences. Planning and recommendations only; reservations are not booked or held.</p>
       </article>
     </section>
 
@@ -102,6 +103,7 @@
           <strong>Clear recommendations. You stay in control.</strong>
           <span>Texas Jet Quote provides research, planning, and supplier links. We do not book, purchase, reserve, or hold flights, rooms, transportation, dining, or activities through this offer.</span>
         </div>
+        <p class="checkout-return" data-checkout-return hidden>Thanks for returning from secure checkout. To start the paid brief, submit the preferences below. Please retain your Stripe checkout confirmation for your records.</p>
       </div>
 
       <form class="brief-form" name="private-trip-brief" method="POST" action="/private-trip-brief/?submitted=1" data-netlify="true" netlify-honeypot="bot-field">
@@ -111,7 +113,7 @@
         <fieldset class="tier-picker">
           <legend>Which starting point fits this trip?</legend>
           <label class="tier-option"><input type="radio" name="request_type" value="arrival_preview" checked><span><strong>Free Arrival Preview</strong><small>A focused arrival-day planning starting point.</small></span></label>
-          <label class="tier-option"><input type="radio" name="request_type" value="full_brief"><span><strong>Founding Full Brief — $249</strong><small>One destination, up to five nights, and one revision.</small></span></label>
+          <label class="tier-option"><input type="radio" name="request_type" value="full_brief"><span><strong>Founding Full Brief — $249</strong><small>One destination, up to five nights, and one revision. Secure Stripe checkout is available after your preferences are saved.</small></span></label>
         </fieldset>
 
         <div class="form-grid">
@@ -146,13 +148,16 @@
         <label class="marketing-opt-in"><input type="checkbox" name="marketing_opt_in" value="yes"><span>Optional: send me occasional Texas Jet Quote planning updates.</span></label>
         <p class="form-privacy">By submitting, you ask Texas Jet Quote to review this planning request. Intake submissions are processed through Netlify and handled under our <a href="/privacy/">Privacy Policy</a>.</p>
         <button class="button button--gold" type="submit" data-trip-brief-submit>Create my free Arrival Preview</button>
-        <p class="form-note" data-tier-note>For the Full Brief, we confirm fit and send secure payment instructions before work begins.</p>
+        <p class="form-note" data-tier-note>For the Full Brief, save your preferences first, then continue to secure Stripe checkout.</p>
       </form>
       <aside class="submission-success" hidden aria-live="polite">
         <p class="eyebrow">Request received</p>
         <h2>Your trip is taking shape.</h2>
-        <p>We have recorded your request. This is a planning resource—not a reservation—and no flight, room, vehicle, dining, or activity has been booked or held.</p>
-        <a class="button button--outline" href="/">Continue to the flight planner</a>
+        <p data-submission-message>We have recorded your request. This is a planning resource—not a reservation—and no flight, room, vehicle, dining, or activity has been booked or held.</p>
+        <div class="submission-success__actions">
+          <a class="button button--gold" href="https://buy.stripe.com/14A14n4u8dtw4O6bBM9IQ07" data-trip-brief-cta data-trip-brief-checkout data-trip-brief-tier="full_brief" data-placement="brief-form-followup" data-submission-checkout hidden>Continue to secure checkout — $249</a>
+          <a class="button button--outline" href="/">Continue to the flight planner</a>
+        </div>
       </aside>
     </section>
 

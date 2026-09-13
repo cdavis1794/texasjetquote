@@ -12,7 +12,8 @@
 - Review new submissions before responding. The form is an inquiry, not an automatic promise of fulfillment.
 - Do not request or accept passports, government IDs, payment-card data, medical records, passwords, exact addresses, or uploads.
 - Do not make reservations, accept supplier funds, or imply that inventory is held.
-- For a Full Brief, confirm fit first and then send a secure, separate payment request. No payment provider or checkout is connected yet.
+- The Full Brief uses the live Well Played Travel Stripe Payment Link `plink_1UF4KzEfOgyEs9gKDPcn7OHs`; checkout returns buyers to the preference form. Stripe hosts card entry, and no payment credentials reach this site.
+- There is no purchase-verification webhook or automatic fulfillment. Match the completed Stripe checkout and submitted preferences before beginning work; do not rely on the return URL alone as proof of payment.
 
 ## Delivery standard
 
