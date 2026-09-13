@@ -9,7 +9,7 @@
   "packageManager": "pnpm@11.19.0",
   "scripts": {
     "build": "node scripts/prepare-site.mjs",
-    "check": "node --check netlify/functions/_lib/deals.mjs && node --check netlify/functions/_lib/facebook.mjs && node --check netlify/functions/deals.mjs && node --check netlify/functions/publish-daily-deal.mjs",
+    "check": "node --check netlify/functions/_lib/deals.mjs && node --check netlify/functions/_lib/facebook.mjs && node --check netlify/functions/deals.mjs && node --check netlify/functions/publish-daily-deal.mjs && node --check assets/private-trip-brief.js && node --check assets/private-trip-brief-tracking.js",
     "test": "node --test"
   },
   "dependencies": {

@@ -92,6 +92,7 @@
     <a href="/houston-private-jet-charter">Houston</a>
     <a href="/san-antonio-private-jet-charter">San Antonio</a>
     <a href="/deals/">Live deals</a>
+    <a href="/private-trip-brief/" data-trip-brief-cta data-trip-brief-tier="arrival_preview" data-placement="root-city-nav">Private trip brief</a>
   </nav>
   <div id="root" role="main" tabindex="-1"></div>
 
@@ -322,6 +323,23 @@
   </script>
   <script>(function(){function m(a){var h=a.getAttribute("href");if(!h)return;try{var u=new URL(h,document.baseURI);if(u.hostname==="villiers.ai"&&!u.searchParams.has("id")){u.searchParams.set("id","1673");a.setAttribute("href",u.toString());}if((u.protocol==="http:"||u.protocol==="https:")&&u.host!==location.host){a.target="_blank";a.rel=u.hostname==="villiers.ai"?"sponsored nofollow noopener noreferrer":"noopener noreferrer";}}catch(e){}}function s(){document.querySelectorAll("a[href]").forEach(m);}if(document.readyState!=="loading"){s();}else{document.addEventListener("DOMContentLoaded",s);}document.addEventListener("click",function(e){var a=e.target&&e.target.closest&&e.target.closest("a[href]");if(a){m(a);}},true);})();</script>
 
+  <section class="trip-brief-bridge" aria-labelledby="trip-brief-bridge-title">
+    <div class="trip-brief-bridge__copy">
+      <p class="trip-brief-bridge__eyebrow">Beyond the flight</p>
+      <h2 id="trip-brief-bridge-title">Private landing. Intentional stay.</h2>
+      <p>Turn a confirmed trip into a considered arrival plan, tailored ground options, and a small set of relevant places to stay, dine, and spend the time.</p>
+      <p class="trip-brief-bridge__note">Start with a complimentary Arrival Preview, or request a Founding Full Brief for one destination and up to five nights.</p>
+    </div>
+    <div class="trip-brief-bridge__actions">
+      <a class="trip-brief-bridge__primary" href="/private-trip-brief/" data-trip-brief-cta data-trip-brief-tier="arrival_preview" data-placement="root-bridge-preview">Get my free Arrival Preview</a>
+      <a class="trip-brief-bridge__secondary" href="/private-trip-brief/?tier=full_brief" data-trip-brief-cta data-trip-brief-tier="full_brief" data-placement="root-bridge-full">Explore the Full Brief — $249</a>
+      <small>Research, planning, and supplier links only. Nothing is booked or held.</small>
+    </div>
+  </section>
+  <style>
+    .trip-brief-bridge{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(260px,.8fr);gap:2rem;align-items:center;padding:clamp(3.5rem,7vw,6rem) max(1.5rem,calc((100% - 1180px)/2));background:#10213e;color:#fff;font-family:Inter,sans-serif}.trip-brief-bridge__copy{max-width:720px}.trip-brief-bridge__eyebrow{margin:0 0 .75rem;color:#e8d5a3;font-size:.72rem;font-weight:800;letter-spacing:.15em;text-transform:uppercase}.trip-brief-bridge h2{margin:0;font:700 clamp(2.2rem,4vw,3.7rem)/1 'Cormorant Garamond',Georgia,serif;letter-spacing:-.04em}.trip-brief-bridge p:not(.trip-brief-bridge__eyebrow){margin:1.15rem 0 0;color:rgba(255,255,255,.75);font-size:1rem;line-height:1.75}.trip-brief-bridge__note{color:rgba(255,255,255,.56)!important;font-size:.86rem!important}.trip-brief-bridge__actions{display:grid;justify-items:start;gap:.85rem;padding:1.4rem;border:1px solid rgba(232,213,163,.24);border-radius:1rem;background:rgba(255,255,255,.055)}.trip-brief-bridge__actions a{display:inline-flex;align-items:center;justify-content:center;min-height:47px;padding:.75rem 1rem;border-radius:.75rem;font-size:.88rem;font-weight:800;text-align:center;text-decoration:none}.trip-brief-bridge__primary{background:#e8d5a3;color:#10213e}.trip-brief-bridge__primary:hover{background:#f4e6bf}.trip-brief-bridge__secondary{color:#fff;text-decoration:underline!important;text-underline-offset:4px!important}.trip-brief-bridge__actions small{color:rgba(255,255,255,.56);font-size:.76rem;line-height:1.55}@media(max-width:760px){.trip-brief-bridge{grid-template-columns:1fr}.trip-brief-bridge__actions{justify-items:stretch}.trip-brief-bridge__actions a{width:100%}}
+  </style>
+
   <section class="seo-methodology" aria-labelledby="estimate-method-title">
     <div class="seo-methodology__inner">
       <p class="seo-methodology__eyebrow">Transparent planning guidance</p>
@@ -357,7 +375,7 @@
   <footer class="site-trust-footer" aria-label="TexasJetQuote information">
     <strong>TexasJetQuote.com</strong>
     <span>Independent private-aviation referral and planning site.</span>
-    <nav aria-label="Trust and legal links"><a href="/about/">About</a><a href="/contact/">Contact</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/affiliate-disclosure/">Affiliate disclosure</a><a href="/booking-refund-policy/">Booking &amp; refund policy</a></nav>
+    <nav aria-label="Trust and legal links"><a href="/about/">About</a><a href="/contact/">Contact</a><a href="/private-trip-brief/">Private trip brief</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/affiliate-disclosure/">Affiliate disclosure</a><a href="/booking-refund-policy/">Booking &amp; refund policy</a></nav>
     <small>We may earn a commission from eligible Villiers bookings at no extra cost to you. Planning ranges are editorial estimates, not live quotes. Confirm the operator, aircraft, certification, price, fees, availability, and terms with Villiers before booking.</small>
   </footer>
   <style>.site-trust-footer{background:#0f172a;color:#fff;padding:2.25rem max(1.5rem,calc((100% - 1180px)/2));font-family:Inter,sans-serif;display:grid;gap:.75rem}.site-trust-footer>span,.site-trust-footer small{color:rgba(255,255,255,.65);line-height:1.6}.site-trust-footer nav{display:flex;flex-wrap:wrap;gap:.7rem 1.15rem}.site-trust-footer nav a{color:#e8d5a3;text-decoration:underline;text-underline-offset:3px}.site-trust-footer small{max-width:980px}</style>
@@ -378,6 +396,7 @@
       } catch (_) {}
     }, true);
   </script>
+  <script src="/assets/private-trip-brief-tracking.js" defer></script>
 
 </body>
 </html>
