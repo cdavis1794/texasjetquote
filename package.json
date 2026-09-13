@@ -1,0 +1,19 @@
+{
+  "name": "texasjetquote-live-deals",
+  "private": true,
+  "type": "module",
+  "version": "1.0.0",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "packageManager": "pnpm@11.19.0",
+  "scripts": {
+    "build": "node scripts/prepare-site.mjs",
+    "check": "node --check netlify/functions/_lib/deals.mjs && node --check netlify/functions/_lib/facebook.mjs && node --check netlify/functions/deals.mjs && node --check netlify/functions/publish-daily-deal.mjs",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "@netlify/blobs": "11.0.3",
+    "@netlify/functions": "6.0.0"
+  }
+}
