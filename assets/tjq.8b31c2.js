@@ -30,25 +30,29 @@
   }
 
   function payloadFor(anchor) {
-    var destination = new URL(anchor.href, document.baseURI);
     return new URLSearchParams({
       "form-name": FORM_NAME,
       event_id: eventId(),
       event_type: "affiliate_click",
       occurred_at: new Date().toISOString(),
-      page_path: window.location.pathname,
+      page_path: window.TJQAcquisition ? window.TJQAcquisition.page() : "other",
       partner: "Villiers",
-      placement: anchor.getAttribute("data-placement") || (anchor.closest("section,header,footer,aside,article") || {}).id || (anchor.closest("section,header,footer,aside,article") || {}).className || "page",
+      placement: String(anchor.getAttribute("data-placement") || (anchor.closest("section,header,footer,aside,article") || {}).id || (anchor.closest("section,header,footer,aside,article") || {}).className || "page").replace(/[^a-zA-Z0-9 _-]/g, "").slice(0, 120),
       button_label: cleanLabel(anchor),
-      destination: destination.origin + destination.pathname,
-      affiliate_id: destination.searchParams.get("id") || DEFAULT_AFFILIATE_ID
+      destination: "https://villiers.ai/",
+      affiliate_id: DEFAULT_AFFILIATE_ID
     });
   }
 
   function record(anchor) {
     if (!isVilliersLink(anchor)) return;
-    var body = payloadFor(anchor).toString();
     try {
+      var payload = payloadFor(anchor);
+      if (window.TJQAcquisition) {
+        var context = window.TJQAcquisition.values();
+        Object.keys(context).forEach(function (key) { payload.set(key, context[key]); });
+      }
+      var body = payload.toString();
       fetch("/", {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },

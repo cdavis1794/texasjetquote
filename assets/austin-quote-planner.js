@@ -104,16 +104,16 @@
   }
 
   function event(name, detail) {
-    if (Array.isArray(window.dataLayer)) {
-      window.dataLayer.push(Object.assign({event: name, page_path: window.location.pathname}, detail || {}));
-    }
+    try {
+      if (Array.isArray(window.dataLayer)) window.dataLayer.push(Object.assign({event: name, page_path: window.TJQAcquisition ? window.TJQAcquisition.page() : "other"}, window.TJQAcquisition ? window.TJQAcquisition.values() : {}, detail || {}));
+    } catch (error) {}
   }
 
   function recordSavedQuoteConversion() {
     if (typeof window.gtag === "function") {
-      window.gtag("event", "conversion", {
+      try { window.gtag("event", "conversion", {
         send_to: "AW-18387073303/uwaLCPKBrOMcEJfy0b9E"
-      });
+      }); } catch (error) {}
     }
   }
 
@@ -150,6 +150,8 @@
     var dateInput = byId("planner-date");
     var destinationInput = byId("planner-destination");
     var currentRoute = null;
+    var saving = false;
+    var saved = false;
 
     if (!plannerForm || !leadForm || !dateInput) return;
 
@@ -182,7 +184,7 @@
       byId("estimate-note").textContent = currentRoute.note;
       populateLeadFields(currentRoute);
       setView("result");
-      event("austin_planning_range", {destination: destination.toLowerCase(), passengers: passengers});
+      event("austin_planning_range", {passengers: passengers});
     });
 
     byId("show-lead-form").addEventListener("click", function () {
@@ -210,13 +212,17 @@
       dateInput.value = localDateString(suggested);
       byId("lead-status").textContent = "";
       currentRoute = null;
+      saved = false;
+      byId("save-request").disabled = false;
+      byId("save-request").textContent = "Save quote request";
       setView("planner");
       destinationInput.focus();
     });
 
     leadForm.addEventListener("submit", async function (submitEvent) {
       submitEvent.preventDefault();
-      if (!leadForm.reportValidity()) return;
+      if (saving || saved || !leadForm.reportValidity()) return;
+      saving = true;
 
       var button = byId("save-request");
       var status = byId("lead-status");
@@ -226,6 +232,7 @@
       leadForm.setAttribute("aria-busy", "true");
 
       try {
+        if (window.TJQAcquisition) window.TJQAcquisition.populate(leadForm);
         var formData = new FormData(leadForm);
         formData.set("form-name", "texas-private-jet-quote");
         formData.set("affiliate_url", AFFILIATE_URL);
@@ -236,12 +243,13 @@
           credentials: "same-origin"
         });
         if (!response.ok) throw new Error("Request could not be saved");
+        saved = true;
         setView("success");
         event("austin_quote_request_saved");
         if (typeof window.gtag === "function") {
-          window.gtag("event", "generate_lead", {
+          try { window.gtag("event", "generate_lead", Object.assign({
             lead_source: "austin_quote_planner"
-          });
+          }, window.TJQAcquisition ? window.TJQAcquisition.values() : {})); } catch (error) {}
         }
         recordSavedQuoteConversion();
       } catch (error) {
@@ -249,6 +257,9 @@
         button.disabled = false;
         button.textContent = "Save quote request";
       } finally {
+        saving = false;
+        button.disabled = false;
+        button.textContent = "Save quote request";
         leadForm.removeAttribute("aria-busy");
       }
     });

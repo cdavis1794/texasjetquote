@@ -22,11 +22,12 @@
 
   function record(anchor) {
     if (!villiersLink(anchor) || typeof window.gtag !== "function") return;
-    window.gtag("event", "affiliate_outbound", {
+    try { window.gtag("event", "affiliate_outbound", Object.assign({
       affiliate_partner: "Villiers",
       link_domain: "villiers.ai",
-      placement: placement(anchor)
-    });
+      placement: placement(anchor),
+      page_path: window.TJQAcquisition ? window.TJQAcquisition.page() : "other"
+    }, window.TJQAcquisition ? window.TJQAcquisition.values() : {})); } catch (error) {}
   }
 
   document.addEventListener("click", function (event) {

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script src="/assets/acquisition-context.js" defer></script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Austin Private Jet Charter | Quotes from AUS &amp; EDC</title>
@@ -181,14 +182,19 @@
             <p class="result-context" id="estimate-note"></p>
             <p class="result-disclaimer">Planning estimate only&mdash;not an offer, live quote, or guarantee of aircraft availability.</p>
             <div class="result-actions">
-              <button id="show-lead-form" class="planner-primary" type="button">Save this request</button>
-              <a class="planner-secondary villiers-link" href="https://villiers.ai/?id=1673" target="_blank" rel="sponsored nofollow noopener">Check live options</a>
+              <a class="planner-primary villiers-link" href="https://villiers.ai/?id=1673" target="_blank" rel="sponsored nofollow noopener">Request current availability</a>
+              <button id="show-lead-form" class="planner-secondary" type="button">Save my itinerary instead</button>
             </div>
             <button id="start-over" class="planner-reset" type="button">Change itinerary</button>
           </div>
 
           <form id="lead-form" class="lead-form" name="texas-private-jet-quote" method="post" data-netlify="true" netlify-honeypot="bot-field" hidden>
             <input type="hidden" name="form-name" value="texas-private-jet-quote">
+    <input type="hidden" name="acquisition_source" value="">
+    <input type="hidden" name="acquisition_medium" value="">
+    <input type="hidden" name="acquisition_campaign" value="">
+    <input type="hidden" name="acquisition_content" value="">
+    <input type="hidden" name="acquisition_landing_page" value="">
             <p class="honeypot"><label>Leave this field empty: <input name="bot-field"></label></p>
             <input type="hidden" name="origin" id="lead-origin">
             <input type="hidden" name="destination" id="lead-destination">
@@ -201,8 +207,8 @@
             <input type="hidden" name="source" value="austin-inline-planner">
             <div class="lead-form__intro">
               <p class="planner-kicker">Save the itinerary</p>
-              <h3>Where should we send the request details?</h3>
-              <p>TexasJetQuote will save this inquiry. Continue to Villiers after saving to request current aircraft and binding terms.</p>
+              <h3>Save your Austin trip plan</h3>
+              <p>This saves your planning inquiry with TexasJetQuote; it does not send a charter request to Villiers or hold an aircraft. You can request current availability directly without saving first.</p>
             </div>
             <div class="field field--full">
               <label for="lead-name">Full name</label>
@@ -216,7 +222,7 @@
               <label for="lead-phone">Phone <span>(optional)</span></label>
               <input id="lead-phone" name="phone" type="tel" autocomplete="tel">
             </div>
-            <button id="save-request" class="planner-primary" type="submit">Save quote request</button>
+            <button id="save-request" class="planner-primary" type="submit">Save my itinerary</button>
             <button id="back-to-result" class="planner-reset" type="button">Back to planning range</button>
             <p id="lead-status" class="lead-status" role="status"></p>
           </form>
@@ -225,7 +231,7 @@
             <span class="success-mark" aria-hidden="true">&#10003;</span>
             <p class="planner-kicker">Request saved</p>
             <h3>Your Austin itinerary is recorded.</h3>
-            <p>Continue to Villiers to request current aircraft availability, operating-provider pricing, and final terms.</p>
+            <p>Your planning inquiry is saved with TexasJetQuote. No charter quote has been requested and no aircraft is held. Continue to Villiers for current availability, operating-provider pricing, and final terms.</p>
             <a class="planner-primary villiers-link" href="https://villiers.ai/?id=1673" target="_blank" rel="sponsored nofollow noopener">Continue to Villiers <span aria-hidden="true">&rarr;</span></a>
             <button id="new-request" class="planner-reset" type="button">Plan another trip</button>
           </div>
@@ -380,6 +386,11 @@
 
   <form name="affiliate-click" method="post" data-netlify="true" netlify-honeypot="bot-field" hidden>
     <input type="hidden" name="form-name" value="affiliate-click">
+    <input type="hidden" name="acquisition_source" value="">
+    <input type="hidden" name="acquisition_medium" value="">
+    <input type="hidden" name="acquisition_campaign" value="">
+    <input type="hidden" name="acquisition_content" value="">
+    <input type="hidden" name="acquisition_landing_page" value="">
     <input name="bot-field">
     <input name="event_id">
     <input name="event_type">
