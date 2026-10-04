@@ -6,9 +6,9 @@
   var knownSources = ["youtube", "google", "bing", "duckduckgo", "yahoo", "facebook", "instagram", "linkedin", "x", "twitter", "tiktok", "newsletter", "email", "wellplayed", "direct", "social", "search", "referral", "other"];
   var knownMedia = ["organic", "organic_social", "cpc", "ppc", "paid_social", "paid-social", "social", "email", "video", "referral", "none", "display", "affiliate", "sponsored", "newsletter", "other"];
   // Explicit public campaign tokens from the launch queue, planned short-03 brief,
-  // and published-post observation log. Unknown labels never retain visitor text.
-  var knownCampaigns = ["organic_launch_30d", "daily_empty_leg"];
-  var knownContents = ["tjq02", "tjq03", "empty-legs-khou-klas-cessna-citation-v-2026-09-19-c1604968", "empty-legs-khou-klas-cessna-citation-v-2026-09-22-72194246"];
+  // published-post log and first-party evergreen generator. Unknown labels never retain visitor text.
+  var knownCampaigns = ["organic_launch_30d", "daily_empty_leg", "daily_quote_planner"];
+  var knownContents = ["tjq02", "tjq03", "quote_planner", "empty-legs-khou-klas-cessna-citation-v-2026-09-19-c1604968", "empty-legs-khou-klas-cessna-citation-v-2026-09-22-72194246"];
   var pages = ["/", "/index.html", "/austin-private-jet-charter.html", "/dallas-private-jet-charter.html", "/houston-private-jet-charter.html", "/san-antonio-private-jet-charter.html", "/private-trip-brief/", "/deals/", "/blog/", "/blog/private-jet-charter-safety-checklist-texas.html", "/blog/private-jet-airports-texas.html", "/blog/how-much-private-jet-texas-costs-2026.html", "/blog/austin-to-houston-private-jet-cost.html", "/blog/austin-to-dallas-private-jet-cost.html", "/contact/", "/about/", "/privacy/", "/terms/", "/affiliate-disclosure/", "/booking-refund-policy/"];
   // The sitemap's city and article URLs omit .html; accept both public versions.
   pages = pages.concat(pages.filter(function (path) { return path !== "/index.html" && path.endsWith(".html"); }).map(function (path) { return path.slice(0, -5); }));

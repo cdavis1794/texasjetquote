@@ -2,8 +2,11 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import vm from "node:vm";
 import test from "node:test";
+import { evergreenLandingUrl } from "../netlify/functions/_lib/facebook.mjs";
 
-const scripts = Object.fromEntries(await Promise.all(["acquisition-context", "tjq.8b31c2", "ga4-events", "austin-quote-planner", "private-trip-brief", "private-trip-brief-tracking"].map(async name => [name, await readFile(new URL(`../assets/${name}.js`, import.meta.url), "utf8")])));
+const scripts = Object.fromEntries(await Promise.all(["acquisition-context", "tjq.8b31c2", "affiliate-click-tracking", "ga4-events", "austin-quote-planner", "private-trip-brief", "private-trip-brief-tracking"].map(async name => [name, await readFile(new URL(`../assets/${name}.js`, import.meta.url), "utf8")])));
+const homepageBundle = await readFile(new URL("../assets/app.47950ff22bd4a.js", import.meta.url), "utf8");
+const dealsPage = await readFile(new URL("../deals/index.html", import.meta.url), "utf8");
 function environment(search = "", stored = new Map()) {
   const listeners = {};
   const document = { baseURI: "https://texasjetquote.com/", referrer: "", documentElement: { setAttribute() {} }, addEventListener(name, callback) { (listeners[name] ||= []).push(callback); }, querySelectorAll() { return []; }, querySelector() { return null; }, getElementById() { return null; } };
@@ -137,10 +140,72 @@ test("Austin keeps its existing Ads conversion once, only after an accepted save
       assert.equal(events.filter(event => event[1] === "conversion").length, 1);
       nodes.get("new-request").handlers.click();
       assert.equal(nodes.get("save-request").disabled, false);
-      assert.equal(nodes.get("save-request").textContent, "Save quote request");
+      assert.equal(nodes.get("save-request").textContent, "Save my itinerary");
       await submit();
       assert.equal(events.filter(event => event[1] === "generate_lead").length, 2);
       assert.equal(events.filter(event => event[1] === "conversion").length, 2);
     } else assert.match(nodes.get("lead-status").textContent, /try again/);
+  }
+});
+test("the deals page records exactly one first-party outbound event for each primary or middle click", () => {
+  const env = environment("?utm_source=facebook&utm_campaign=daily_empty_leg");
+  env.window.location.pathname = "/deals/";
+  const posts = [];
+  env.context.fetch = (url, options) => { posts.push(options); return Promise.resolve({ ok: true }); };
+  const declared = [...dealsPage.matchAll(/src="\/assets\/([^"/]+)\.js"/g)].map(match => match[1]);
+  for (const name of declared.filter(name => ["acquisition-context", "tjq.8b31c2", "affiliate-click-tracking", "ga4-events"].includes(name))) env.run(name);
+  const anchor = { href: "https://villiers.ai/?id=1673", textContent: "Check current options", getAttribute: () => "live-deals-empty-state", closest: () => null };
+  for (const [type, button] of [["click", 0], ["auxclick", 1]]) {
+    const count = posts.length;
+    for (const handler of env.listeners[type]) handler({ button, target: { closest: () => anchor } });
+    assert.equal(posts.length - count, 1);
+    const payload = new URLSearchParams(posts.at(-1).body);
+    assert.equal(payload.get("form-name"), "affiliate-click");
+    assert.equal(payload.get("affiliate_id"), "1673");
+    assert.equal(payload.get("acquisition_campaign"), "daily_empty_leg");
+  }
+  assert.equal(anchor.href, "https://villiers.ai/?id=1673");
+});
+test("evergreen generated links retain their fixed public campaign and content category", () => {
+  for (const date of ["2026-10-03", "2026-10-04"]) {
+    const link = new URL(evergreenLandingUrl("https://texasjetquote.com", new Date(`${date}T16:00:00Z`)));
+    const env = environment(link.search);
+    env.window.location.pathname = "/";
+    env.run("acquisition-context");
+    assert.equal(env.window.TJQAcquisition.values().acquisition_source, "facebook");
+    assert.equal(env.window.TJQAcquisition.values().acquisition_medium, "organic");
+    assert.equal(env.window.TJQAcquisition.values().acquisition_campaign, "daily_quote_planner");
+    assert.equal(env.window.TJQAcquisition.values().acquisition_content, "quote_planner");
+    assert.doesNotMatch(link.searchParams.get("utm_content"), /\d{4}-\d{2}-\d{2}/);
+  }
+});
+test("homepage optional saves send minimal safe campaign context and tolerate unavailable attribution", async () => {
+  // Exercise the actual bundled handler with synthetic form values and a stub POST.
+  const start = homepageBundle.indexOf("Z=async()=>{");
+  const end = homepageBundle.indexOf(",H=", start);
+  assert.ok(start >= 0 && end > start, "homepage save handler boundary remains identifiable");
+  const handler = homepageBundle.slice(start + 2, end);
+  for (const mode of ["available", "missing", "blocked", "rejected"]) {
+    const env = environment("?utm_source=facebook&utm_medium=organic&utm_campaign=daily_quote_planner&utm_content=quote_planner&unexpected=private-value");
+    env.window.location.pathname = "/";
+    env.run("acquisition-context");
+    if (mode === "missing") delete env.window.TJQAcquisition;
+    if (mode === "blocked") env.window.TJQAcquisition = { values() { throw Error("blocked"); } };
+    const states = [], posts = [];
+    Object.assign(env.context, { s: { name: "Test Traveler", email: "test@example.invalid", phone: "" }, l: { from: "Austin", to: "Dallas", pax: "2", date: "2026-10-25" }, c: { low: "$8,000", high: "$14,000" }, Cn: "https://villiers.ai/?id=1673", _: () => {}, n: value => states.push(value) });
+    env.context.fetch = async (url, options) => { posts.push(options); return { ok: mode !== "rejected" }; };
+    await vm.runInContext(`(${handler})()`, env.context);
+    assert.equal(posts.length, 1);
+    const payload = new URLSearchParams(posts[0].body);
+    assert.equal(payload.get("affiliate_url"), "https://villiers.ai/?id=1673");
+    assert.equal(payload.get("form-name"), "texas-private-jet-quote");
+    assert.doesNotMatch(posts[0].body, /unexpected|private-value/);
+    if (mode === "available" || mode === "rejected") {
+      assert.equal(payload.get("acquisition_source"), "facebook");
+      assert.equal(payload.get("acquisition_campaign"), "daily_quote_planner");
+      assert.equal(payload.get("acquisition_content"), "quote_planner");
+      assert.equal(payload.get("acquisition_landing_page"), "/");
+    } else assert.equal(payload.has("acquisition_source"), false);
+    assert.equal(states.at(-1), mode === "rejected" ? "collecting_lead" : "confirmed");
   }
 });

@@ -36,7 +36,8 @@ export function evergreenLandingUrl(baseUrl = process.env.PUBLIC_SITE_URL, now =
   url.searchParams.set("utm_source", "facebook");
   url.searchParams.set("utm_medium", "organic");
   url.searchParams.set("utm_campaign", "daily_quote_planner");
-  url.searchParams.set("utm_content", texasDateKey(now));
+  // A fixed public content category matches the site's minimal attribution allowlist.
+  url.searchParams.set("utm_content", "quote_planner");
   return url.toString();
 }
 

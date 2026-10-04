@@ -214,7 +214,7 @@
       currentRoute = null;
       saved = false;
       byId("save-request").disabled = false;
-      byId("save-request").textContent = "Save quote request";
+      byId("save-request").textContent = "Save my itinerary";
       setView("planner");
       destinationInput.focus();
     });
@@ -255,11 +255,11 @@
       } catch (error) {
         status.textContent = "We could not save the request. Please try again or continue to Villiers for current options.";
         button.disabled = false;
-        button.textContent = "Save quote request";
+        button.textContent = "Save my itinerary";
       } finally {
         saving = false;
         button.disabled = false;
-        button.textContent = "Save quote request";
+        button.textContent = "Save my itinerary";
         leadForm.removeAttribute("aria-busy");
       }
     });
