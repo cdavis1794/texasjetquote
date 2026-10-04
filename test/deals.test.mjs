@@ -56,6 +56,50 @@ test("parses the public Villiers fields and keeps the tracked booking URL", () =
   assert.equal(new URL(deals[0].bookingUrl).searchParams.get("id"), "1673");
 });
 
+function feedWithTrackingUrl(url, { tracking = true } = {}) {
+  const item = /<item\b[^>]*>[\s\S]*?<\/item>/.exec(FEED)[0];
+  const encoded = url.replaceAll("&", "&amp;");
+  const replaced = tracking
+    ? item.replace(/(<villiers:trackingLink>)[\s\S]*?(<\/villiers:trackingLink>)/, `$1${encoded}$2`)
+    : item.replace(/<villiers:trackingLink>[\s\S]*?<\/villiers:trackingLink>/, "").replace(/(<link>)[\s\S]*?(<\/link>)/, `$1${encoded}$2`);
+  return `<rss><channel>${replaced}</channel></rss>`;
+}
+
+test("preserves a provider-supplied canonical 1673 URL without query or path rewriting", () => {
+  const raw = "https://villiers.ai/empty-legs/Example%2DRoute?provider_ref=Public%2FListing&id=1673&sort=price+asc";
+  for (const tracking of [true, false]) {
+    const deals = parseVilliersFeed(feedWithTrackingUrl(raw, { tracking }));
+    assert.equal(deals.length, 1);
+    assert.equal(deals[0].bookingUrl, raw);
+  }
+});
+
+test("rejects wrong, absent or ambiguous affiliate IDs instead of repairing or falling back", () => {
+  const base = "https://villiers.ai/empty-legs/example";
+  for (const query of ["?id=9999", "", "?id=", "?id=1673&id=9999", "?id=1673&id=1673", "?id=1673&ID=9999", "?ID=1673", "?i%64=1673", "?id=%31%36%37%33", "?id=1673%20", "?id=1673;id=9999"]) {
+    // A valid ordinary <link> cannot override an invalid explicit trackingLink.
+    assert.deepEqual(parseVilliersFeed(feedWithTrackingUrl(base + query)), [], query);
+  }
+});
+
+test("rejects unverified hosts, schemes, credentials and malformed or fragment destinations", () => {
+  for (const url of [
+    "http://villiers.ai/empty-legs/example?id=1673",
+    "javascript:alert(1)",
+    "/empty-legs/example?id=1673",
+    "https://partner.villiers.ai/empty-legs/example?id=1673",
+    "https://villiers.ai.evil.example/empty-legs/example?id=1673",
+    "https://user:password@villiers.ai/empty-legs/example?id=1673",
+    "https://villiers.ai:8443/empty-legs/example?id=1673",
+    "https:////villiers.ai/empty-legs/example?id=1673",
+    "https://villiers.ai/empty-legs/example?id=1673#id=9999",
+    "https://villiers.ai/empty-legs/example?id=1673#",
+    "https://villiers.ai/empty legs/example?id=1673",
+    "https://villiers.ai/empty-legs/example%zz?id=1673",
+    "https://villiers.ai\\evil.example/empty-legs/example?id=1673"
+  ]) assert.deepEqual(parseVilliersFeed(feedWithTrackingUrl(url)), [], url);
+});
+
 test("ranks a Texas-connected, upcoming listing and rejects global and expired inventory", () => {
   const ranked = rankDeals(parseVilliersFeed(FEED), { now: NOW });
   assert.equal(ranked.length, 1);

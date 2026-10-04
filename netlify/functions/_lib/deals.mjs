@@ -71,11 +71,16 @@ function price(value) {
 
 function bookingUrl(value) {
   try {
-    const url = new URL(text(value));
-    const host = url.hostname.toLowerCase();
-    if (host !== "villiers.ai" && !host.endsWith(".villiers.ai")) return "";
-    if (!url.searchParams.has("id")) url.searchParams.set("id", "1673");
-    return url.toString();
+    // Validate the provider's decoded feed URL without creating or rewriting attribution.
+    const candidate = typeof value === "string" ? value : "";
+    if (!/^https:\/\/villiers\.ai(?:\/|\?|$)/i.test(candidate) || /[\u0000-\u0020\u007f\\#]/.test(candidate) || /%(?![a-f0-9]{2})/i.test(candidate)) return "";
+    const url = new URL(candidate);
+    if (url.protocol !== "https:" || url.hostname.toLowerCase() !== "villiers.ai" || url.username || url.password || url.port || url.hash) return "";
+    const ids = [...url.searchParams].filter(([key]) => key.toLowerCase() === "id");
+    if (ids.length !== 1 || ids[0][0] !== "id" || ids[0][1] !== "1673") return "";
+    // Reject encoded or duplicate spellings that could be interpreted differently downstream.
+    if (!url.search.slice(1).split("&").includes("id=1673")) return "";
+    return candidate;
   } catch {
     return "";
   }
