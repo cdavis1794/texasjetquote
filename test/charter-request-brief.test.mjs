@@ -16,14 +16,17 @@ function mount(writeText) {
   const template = page.match(/id="charter-brief-output"[^>]*>([\s\S]*?)<\/textarea>/)[1];
   const output = { value: template, focus() { this.focused = true; }, select() { this.selected = true; } };
   const copy = { hidden: true, addEventListener(event, fn) { this.click = fn; } };
+  const printButton = { hidden: true, addEventListener(event, fn) { this.click = fn; } };
+  const printOutput = { textContent: "" };
+  let printCount = 0;
   const status = { textContent: "" };
   const document = {
     querySelectorAll: () => fields,
-    getElementById: () => output,
-    querySelector: selector => selector.includes("data-copy") ? copy : status
+    getElementById: id => id === "charter-brief-print-output" ? printOutput : output,
+    querySelector: selector => selector.includes("data-copy") ? copy : selector.includes("data-print") ? printButton : status
   };
-  vm.runInNewContext(script, { document, navigator: { clipboard: { writeText } } });
-  return { fields, output, copy, status };
+  vm.runInNewContext(script, { document, window: { print() { printCount += 1; } }, navigator: { clipboard: { writeText } } });
+  return { fields, output, copy, status, printButton, printOutput, get printCount() { return printCount; } };
 }
 
 test("brief retains unresolved details and updates itinerary without removing comparison checks", () => {
@@ -59,4 +62,30 @@ test("guide keeps its canonical and sponsored referral while brief has no transm
   assert.match(page, /href="https:\/\/villiers.ai\/\?id=1673" rel="sponsored nofollow noopener"/);
   assert.match(page, /<noscript>/);
   assert.doesNotMatch(script, /fetch\(|XMLHttpRequest|localStorage|sessionStorage|gtag\(|innerHTML|location\./);
+});
+
+test("print mirror follows current itinerary and only the explicit button opens printing", () => {
+  const app = mount(async () => {});
+  assert.equal(app.printButton.hidden, false);
+  assert.equal(app.printCount, 0);
+  assert.equal(app.printOutput.textContent, app.output.value);
+  app.fields[4].value = "<untrusted itinerary text>";
+  app.fields[4].listeners.input();
+  assert.equal(app.printOutput.textContent, app.output.value);
+  assert.match(app.printOutput.textContent, /<untrusted itinerary text>/);
+  app.printButton.click();
+  assert.equal(app.printCount, 1);
+});
+
+test("versioned checklist carries sources, optional citation, disclosure and a complete no-script print template", () => {
+  assert.match(page, /Version 1\.0/);
+  assert.match(page, /Sources reviewed October 3, 2026/);
+  assert.match(page, /other quote-comparison questions are editorial planning prompts/i);
+  assert.match(page, /#trip-brief/);
+  assert.match(page, /A citation or link is welcome, not required/);
+  assert.match(page, /brief-print-disclosure[\s\S]*?independent Villiers affiliate/);
+  const initialPrint = page.match(/id="charter-brief-print-output"[^>]*>([\s\S]*?)<\/pre>/)[1];
+  const initialText = page.match(/id="charter-brief-output"[^>]*>([\s\S]*?)<\/textarea>/)[1];
+  assert.equal(initialPrint.replace(/\r/g, ""), initialText.replace(/\r/g, ""));
+  assert.match(page, /@media print/);
 });

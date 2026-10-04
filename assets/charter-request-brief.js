@@ -2,6 +2,8 @@
   "use strict";
   var fields = document.querySelectorAll("[data-brief-field]");
   var output = document.getElementById("charter-brief-output");
+  var printOutput = document.getElementById("charter-brief-print-output");
+  var printButton = document.querySelector("[data-print-charter-brief]");
   var copy = document.querySelector("[data-copy-charter-brief]");
   var status = document.querySelector("[data-brief-status]");
   if (!output || !fields.length || !copy || !status) return;
@@ -24,6 +26,7 @@
       lines.push(labels[field.getAttribute("data-brief-field")] + ": " + (value || "[confirm]"));
     });
     output.value = lines.join("\n") + checklist;
+    if (printOutput) printOutput.textContent = output.value;
     status.textContent = "";
   }
   fields.forEach(function (field) {
@@ -31,6 +34,10 @@
     field.addEventListener("change", update);
   });
   copy.hidden = false;
+  if (printButton) {
+    printButton.hidden = false;
+    printButton.addEventListener("click", function () { window.print(); });
+  }
   update();
   copy.addEventListener("click", async function () {
     try {
