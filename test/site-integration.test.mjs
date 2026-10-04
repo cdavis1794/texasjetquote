@@ -45,3 +45,14 @@ test("handoffs distinguish saved plans, provider availability, and payment", asy
   assert.match(brief, /This page does not verify payment/);
   assert.match(brief, /href="#brief-intake"[^>]*data-placement="brief-full-card"/);
 });
+
+test("editorial and partner contact uses the selected inbox without taking over booking support", async () => {
+  const contact = await readFile(join(root, "contact/index.html"), "utf8");
+  assert.match(contact, /href="mailto:wellplayedtravel@gmail\.com">wellplayedtravel@gmail\.com/);
+  assert.match(contact, /For editorial corrections or partnership inquiries/);
+  assert.match(contact, /This inbox does not handle charter quotes, bookings, payments, trip changes, cancellations or refunds/);
+  assert.match(contact, /Do not send card numbers, passport scans/);
+  assert.match(contact, /href="https:\/\/villiers\.ai\/\?id=1673" rel="sponsored nofollow noopener"/);
+  assert.match(contact, /href="https:\/\/texasjetquote\.com\/contact\/"/);
+  assert.doesNotMatch(contact, /If no direct editorial channel is displayed/);
+});
