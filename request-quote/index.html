@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Request aircraft options | TexasJetQuote</title>
+  <link rel="stylesheet" href="/assets/villiers-quote.css">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18387073303"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','AW-18387073303');</script>
+  <script src="/assets/acquisition-context.js" defer></script>
+  <script src="/assets/tjq.8b31c2.js" defer></script>
+  <script src="/assets/ga4-events.js" defer></script>
+  <script src="/assets/villiers-quote.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to main content</a>
+  <header><div class="header-inner"><a class="brand" href="/"><img src="/logo.png" alt="">TexasJetQuote</a><a class="back-link" href="/">Back to trip planner</a></div></header>
+  <main id="main" class="layout">
+    <section class="intro">
+      <p class="eyebrow">YOUR TRIP, CARRIED FORWARD</p>
+      <h1>Request current aircraft options.</h1>
+      <p>Review your trip, see an indicative range from Villiers, then request confirmed options and a secure booking link by email.</p>
+      <ul><li>Your itinerary stays with your request</li><li>See an estimate before sharing contact details</li><li>No payment or aircraft hold on this page</li></ul>
+      <p class="disclosure">TexasJetQuote is an independent Villiers affiliate. We may earn a commission on an eligible booking at no added cost to you. Villiers and the operating carrier confirm availability, pricing and final terms.</p>
+    </section>
+    <section class="card" aria-label="Quote request">
+      <form id="trip-form">
+        <p class="eyebrow">STEP 1 &middot; YOUR ITINERARY</p>
+        <h2 id="trip-title">Review your trip</h2>
+        <label>From <input id="origin" name="origin" maxlength="100" required autocomplete="off"></label>
+        <label>To <input id="destination" name="destination" maxlength="100" required autocomplete="off"></label>
+        <div class="pair"><label>Departure <input id="departure" name="departure" type="date" required></label><label>Passengers <input id="passengers" name="passengers" type="number" min="1" max="19" step="1" value="3" required></label></div>
+        <p class="note">This request is for a one-way trip. For return or multi-leg travel, use the Villiers link below.</p>
+        <button id="estimate-submit" type="submit">See Villiers estimate <span aria-hidden="true">&rarr;</span></button>
+      </form>
+      <div id="estimate-result" hidden aria-live="polite">
+        <p class="eyebrow">STEP 2 &middot; INDICATIVE ESTIMATE</p>
+        <h2>Villiers planning range</h2>
+        <p id="estimate-route" class="route"></p>
+        <p id="provider-route" class="route"></p>
+        <ul id="estimate-categories" class="categories"></ul>
+        <p class="note">Indicative estimate only, based on historical charter pricing; it does not account for your departure date. It is not a confirmed price or a guarantee of aircraft availability. Villiers will confirm current options and terms.</p>
+        <button id="request-options" type="button">Request confirmed options <span aria-hidden="true">&rarr;</span></button>
+        <button id="change-trip" type="button" class="text-button">Change trip</button>
+      </div>
+      <form id="contact-form" hidden>
+        <p class="eyebrow">STEP 3 &middot; YOUR REQUEST</p>
+        <h2>Where should Villiers send options?</h2>
+        <div class="pair"><label>First name <input id="first-name" autocomplete="given-name" maxlength="80" required></label><label>Last name <input id="last-name" autocomplete="family-name" maxlength="80" required></label></div>
+        <label>Email <input id="email" type="email" autocomplete="email" maxlength="254" required></label>
+        <label>Phone <span class="optional">(optional)</span> <input id="phone" type="tel" autocomplete="tel" maxlength="40"></label>
+        <div class="honeypot" aria-hidden="true"><label>Leave empty <input id="website" tabindex="-1" autocomplete="off"></label></div>
+        <label class="consent"><input id="consent" type="checkbox" required><span>I have reviewed the estimate and want Villiers to receive my trip and contact details and email me confirmed options and a secure booking link.</span></label>
+        <button id="confirm-submit" type="submit">Send request to Villiers <span aria-hidden="true">&rarr;</span></button>
+        <button id="back-to-estimate" type="button" class="text-button">Back to estimate</button>
+        <p class="note">Submitting does not book or hold an aircraft. <a href="/privacy/">Privacy information</a></p>
+      </form>
+      <div id="complete" hidden aria-live="polite"><p class="eyebrow">REQUEST RECEIVED</p><h2 id="complete-title">Villiers has your trip.</h2><p id="complete-message">Villiers will work on confirmed options and email you a secure link to review and book if options are available. This is a request for pricing, not a booking or aircraft hold.</p><p class="note">Reference: <span id="reference"></span></p></div>
+      <p id="quote-status" class="status" role="status" aria-live="polite"></p>
+      <p class="fallback">Prefer to continue with Villiers directly? <a href="https://villiers.ai/?id=1673" rel="sponsored nofollow noopener">Open the affiliate link &rarr;</a></p>
+    </section>
+  </main>
+  <footer><a href="/privacy/">Privacy</a> &middot; <a href="/affiliate-disclosure/">Affiliate disclosure</a> &middot; <a href="/contact/">Contact</a></footer>
+</body>
+</html>

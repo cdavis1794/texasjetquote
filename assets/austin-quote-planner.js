@@ -264,6 +264,20 @@
       }
     });
 
+    ["request-provider-quote", "request-provider-from-saved"].forEach(function (id) {
+      var link = byId(id);
+      if (!link) return;
+      link.addEventListener("click", function () {
+        if (typeof window.TJQQuoteHandoff === "function") window.TJQQuoteHandoff({
+          origin: byId("planner-origin").value.trim(),
+          destination: destinationInput.value.trim(),
+          departure_date: dateInput.value,
+          passengers: byId("planner-passengers").value
+        });
+        event("austin_provider_request_opened");
+      });
+    });
+
     document.querySelectorAll("a.villiers-link").forEach(function (link) {
       link.addEventListener("click", function () {
         event("austin_villiers_click", {button_label: link.textContent.trim().slice(0, 80)});

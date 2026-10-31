@@ -40,7 +40,10 @@ test("handoffs distinguish saved plans, provider availability, and payment", asy
   const austin = await readFile(join(root, "austin-private-jet-charter.html"), "utf8");
   const brief = await readFile(join(root, "private-trip-brief/index.html"), "utf8");
   assert.match(austin, /No charter quote has been requested and no aircraft is held/);
-  assert.match(austin, /class="planner-primary villiers-link"[^>]*>Request current availability/);
+  assert.match(austin, /id="request-provider-quote"[^>]*href="\/request-quote\/"[^>]*>Request current availability/);
+  const quote = await readFile(join(root, "request-quote/index.html"), "utf8");
+  assert.match(quote, /href="https:\/\/villiers\.ai\/\?id=1673"/);
+  assert.match(quote, /id="consent" type="checkbox" required/);
   assert.match(brief, /data-trip-brief-status role="status" aria-live="polite"/);
   assert.match(brief, /This page does not verify payment/);
   assert.match(brief, /href="#brief-intake"[^>]*data-placement="brief-full-card"/);
