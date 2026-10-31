@@ -177,7 +177,7 @@ test("the Ads conversion fires only for an acknowledged real request, never for 
       return elements.get(id);
     };
     const document = { getElementById: element, createElement: () => ({ textContent: "", append() {} }), addEventListener(name, fn) { listeners[name] = fn; } };
-    const window = { location: { hostname: "texasjetquote.com" }, gtag(...args) { events.push(args); } };
+    const window = { location: { hostname: "texasjetquote.com" }, TJQAcquisition: { values: () => ({ acquisition_source: "referral", acquisition_medium: "referral", acquisition_campaign: "planner_partners", acquisition_content: "event_planners", acquisition_landing_page: "/for-planners/" }) }, gtag(...args) { events.push(args); } };
     const sessionStorage = { getItem: () => null, removeItem() {} };
     const fetcher = async (_url, options) => {
       const body = JSON.parse(options.body);
@@ -195,11 +195,16 @@ test("the Ads conversion fires only for an acknowledged real request, never for 
     element("request-options").callbacks.click();
     await submit("contact-form");
     await submit("contact-form");
-    return events.filter((entry) => entry[1] === "conversion");
+    return events;
   }
   const real = await runCase("traveler@example.invalid", "received");
-  assert.equal(real.length, 1);
-  assert.equal(real[0][2].send_to, "AW-18387073303/Z9O3CP3Yra8dEJfy0b9E");
-  assert.equal((await runCase("sandbox-test@mail.villiers.ai", "received")).length, 0);
-  assert.equal((await runCase("traveler@example.invalid", "uncertain")).length, 0);
+  const conversions = real.filter((entry) => entry[1] === "conversion");
+  assert.equal(conversions.length, 1);
+  assert.equal(conversions[0][2].send_to, "AW-18387073303/Z9O3CP3Yra8dEJfy0b9E");
+  const submitted = real.find((entry) => entry[1] === "villiers_quote_submitted");
+  assert.equal(submitted[2].acquisition_campaign, "planner_partners");
+  assert.equal(submitted[2].acquisition_content, "event_planners");
+  assert.doesNotMatch(JSON.stringify(submitted), /traveler@example|Austin|Aspen/);
+  assert.equal((await runCase("sandbox-test@mail.villiers.ai", "received")).filter((entry) => entry[1] === "conversion").length, 0);
+  assert.equal((await runCase("traveler@example.invalid", "uncertain")).filter((entry) => entry[1] === "conversion").length, 0);
 });
