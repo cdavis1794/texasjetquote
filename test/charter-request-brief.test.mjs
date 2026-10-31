@@ -13,7 +13,8 @@ function mount(writeText) {
     getAttribute: () => key,
     addEventListener(event, fn) { this.listeners[event] = fn; }
   }));
-  const template = page.match(/id="charter-brief-output"[^>]*>([\s\S]*?)<\/textarea>/)[1];
+  // Browsers normalize textarea line endings even when Git checks HTML out as CRLF.
+  const template = page.match(/id="charter-brief-output"[^>]*>([\s\S]*?)<\/textarea>/)[1].replace(/\r\n/g, "\n");
   const output = { value: template, focus() { this.focused = true; }, select() { this.selected = true; } };
   const copy = { hidden: true, addEventListener(event, fn) { this.click = fn; } };
   const printButton = { hidden: true, addEventListener(event, fn) { this.click = fn; } };
