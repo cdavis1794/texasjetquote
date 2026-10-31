@@ -141,7 +141,11 @@ test("missing affiliate credentials fail closed, and trip handoffs preserve the 
   const html = await readFile(new URL("../request-quote/index.html", import.meta.url), "utf8");
   const home = await readFile(new URL("../assets/app.47950ff22bd4a.js", import.meta.url), "utf8");
   assert.match(html, /https:\/\/villiers\.ai\/\?id=1673/);
-  assert.equal((home.match(/href:"\/request-quote\/",onClick:\(\)=>window\.TJQQuoteHandoff/g) || []).length, 3);
+  assert.equal((home.match(/href:"\/request-quote\/",onClick:\(\)=>window\.TJQQuoteHandoff/g) || []).length, 4);
+  const floatingPlanner = home.slice(home.indexOf('children:"TEXASJETQUOTE PLANNER"'));
+  const savedPlan = floatingPlanner.slice(floatingPlanner.indexOf('r==="confirmed"'), floatingPlanner.indexOf('children:"New Trip Plan"'));
+  assert.match(savedPlan, /href:"\/request-quote\/",onClick:\(\)=>window\.TJQQuoteHandoff\?\.\(\{origin:l\.from,destination:l\.to,departure_date:l\.date,passengers:l\.pax\}\)/);
+  assert.doesNotMatch(savedPlan, /target:"_blank"|href:Cn/);
 });
 
 test("homepage handoff retains the selected date and clears a date when a new trip leaves it blank", async () => {

@@ -7,7 +7,7 @@ const app = fs.readFileSync(new URL("../assets/app.47950ff22bd4a.js", import.met
 test("homepage separates saved planning requests from provider quotes", () => {
   assert.ok(app.includes("Save Trip Plan (Optional)"));
   assert.ok(app.includes("Request current availability"));
-  assert.ok(app.includes("Trip plan saved. Continue to Villiers"));
+  assert.ok(app.includes("Trip plan saved. Continue to request current aircraft availability"));
   assert.ok(app.includes("Planning range • Confirm fees and inclusions with the provider"));
   for (const claim of ["No repositioning hidden", "Catering credit included", "Hold via AI", "Was ~$", "All-In Investment", "Get Confirmed Aircraft", "Save Trip & Request Current Options", "AI QUOTE AGENT", "Saving your quote request…"]) {
     assert.ok(!app.includes(claim), `Unsupported or ambiguous claim: ${claim}`);
@@ -25,7 +25,11 @@ test("homepage avoids unsupported operator and service guarantees", () => {
 
 test("homepage preserves tracked Villiers referral and disclosures", () => {
   assert.ok(app.includes('Cn="https://villiers.ai/?id=1673"'));
-  assert.ok(app.includes("Independent referral site • Villiers affiliate id=1673"));
+  assert.ok(app.includes("Independent Villiers affiliate. We may earn a commission on eligible bookings."));
+  assert.ok(app.includes("Independent affiliate. We may earn a commission."));
+  assert.ok(!app.includes("Villiers affiliate id=1673"));
+  assert.ok(!app.includes("affiliate ID 1673"));
+  assert.ok(!app.includes("affiliate tracking is active (id=1673)"));
   assert.ok(app.includes("Affiliate Disclosure"));
   assert.ok(app.includes("Planning ranges are editorial estimates"));
   assert.ok(app.includes('rel:"sponsored nofollow noopener"'));
