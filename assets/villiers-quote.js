@@ -16,7 +16,9 @@
   }
   function event(name) {
     if (/^(?:www\.)?texasjetquote\.com$/.test(window.location.hostname) && typeof window.gtag === "function") {
-      try { window.gtag("event", name, { page_path: "/request-quote/" }); } catch (error) {}
+      var context = {};
+      try { if (window.TJQAcquisition) context = window.TJQAcquisition.values(); } catch (error) {}
+      try { window.gtag("event", name, Object.assign({}, context, { page_path: "/request-quote/" })); } catch (error) {}
     }
   }
   function trackQuote(email) {

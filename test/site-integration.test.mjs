@@ -49,6 +49,14 @@ test("handoffs distinguish saved plans, provider availability, and payment", asy
   assert.match(brief, /href="#brief-intake"[^>]*data-placement="brief-full-card"/);
 });
 
+test("planner resource directs travelers to the existing planner and discloses the referral", async () => {
+  const resource = await readFile(join(root, "for-planners/index.html"), "utf8");
+  assert.match(resource, /href="\/" data-placement="planner-resource-hero"/);
+  assert.match(resource, /independent Villiers affiliate and may earn a commission/);
+  assert.match(resource, /Villiers emails confirmed options and a secure booking link/);
+  assert.doesNotMatch(resource, /<form\b/);
+});
+
 test("editorial and partner contact uses the selected inbox without taking over booking support", async () => {
   const contact = await readFile(join(root, "contact/index.html"), "utf8");
   assert.match(contact, /href="mailto:wellplayedtravel@gmail\.com">wellplayedtravel@gmail\.com/);

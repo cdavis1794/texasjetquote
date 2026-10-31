@@ -29,6 +29,20 @@ test("campaign context retains only bounded slugs and known page paths across th
   assert.equal(next.window.TJQAcquisition.values().acquisition_landing_page, "/austin-private-jet-charter.html");
   assert.doesNotMatch(JSON.stringify([...storage.values()]), /Jane|jane|secret|google|term|email/);
 });
+test("planner campaign survives the quote handoff without retaining personal query data", () => {
+  const storage = new Map();
+  const landing = environment("?utm_source=referral&utm_medium=referral&utm_campaign=planner_partners&utm_content=event_planners&email=someone%40example.com", storage);
+  landing.window.location.pathname = "/for-planners/";
+  landing.run("acquisition-context");
+  const quote = environment("", storage);
+  quote.window.location.pathname = "/request-quote/";
+  quote.run("acquisition-context");
+  assert.deepEqual(JSON.parse(JSON.stringify(quote.window.TJQAcquisition.values())), {
+    acquisition_source: "referral", acquisition_medium: "referral", acquisition_campaign: "planner_partners",
+    acquisition_content: "event_planners", acquisition_landing_page: "/for-planners/"
+  });
+  assert.doesNotMatch(JSON.stringify([...storage.values()]), /someone|example\.com|email/i);
+});
 test("personal URLs and malformed campaign labels never enter context; denied storage is harmless", () => {
   const env = environment("?utm_source=jane%40example.com&utm_medium=https%3A%2F%2Fx.com&utm_campaign=call-2125551234&utm_content=Jane%20Doe");
   env.window.location.pathname = "/customers/jane@example.com";
